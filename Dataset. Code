@@ -1,0 +1,63 @@
+
+import pandas as pd
+import numpy as np 
+df=pd.read_csv("C:\\Users\\Welcome\\Desktop\\Salaries\\ds_salaries.csv")
+df
+df.head(5)
+work_year	experience_level	employment_type	job_title	salary	salary_currency	salary_in_usd	employee_residence	remote_ratio	company_location	company_size
+0	2023	SE	FT	Principal Data Scientist	80000	EUR	85847	ES	100	ES	L
+1	2023	MI	CT	ML Engineer	30000	USD	30000	US	100	US	S
+2	2023	MI	CT	ML Engineer	25500	USD	25500	US	100	US	S
+3	2023	SE	FT	Data Scientist	175000	USD	175000	CA	100	CA	M
+4	2023	SE	FT	Data Scientist	120000	USD	120000	CA	100	CA	M
+df.groupby(['work_year'])['salary'].mean()
+work_year
+2020    386352.750000
+2021    544163.252174
+2022    165421.016827
+2023    160381.480672
+Name: salary, dtype: float64
+df_u = df.rename(columns= {'salary':'Income'},inplace=False)
+(df_u.groupby(['work_year']).Income.mean())
+work_year
+2020    386352.750000
+2021    544163.252174
+2022    165421.016827
+2023    160381.480672
+Name: Income, dtype: float64
+from sklearn import preprocessing
+enc = preprocessing.OneHotEncoder()
+enc_df = pd.DataFrame(enc.fit_transform(df[['employment_type']]).toarray())
+enc_df
+0	1	2	3
+0	0.0	0.0	1.0	0.0
+1	1.0	0.0	0.0	0.0
+2	1.0	0.0	0.0	0.0
+3	0.0	0.0	1.0	0.0
+4	0.0	0.0	1.0	0.0
+...	...	...	...	...
+3750	0.0	0.0	1.0	0.0
+3751	0.0	0.0	1.0	0.0
+3752	0.0	0.0	1.0	0.0
+3753	1.0	0.0	0.0	0.0
+3754	0.0	0.0	1.0	0.0
+3755 rows × 4 columns
+
+df_encode = df.join(enc_df)
+df_encode
+work_year	experience_level	employment_type	job_title	salary	salary_currency	salary_in_usd	employee_residence	remote_ratio	company_location	company_size	0	1	2	3
+0	2023	SE	FT	Principal Data Scientist	80000	EUR	85847	ES	100	ES	L	0.0	0.0	1.0	0.0
+1	2023	MI	CT	ML Engineer	30000	USD	30000	US	100	US	S	1.0	0.0	0.0	0.0
+2	2023	MI	CT	ML Engineer	25500	USD	25500	US	100	US	S	1.0	0.0	0.0	0.0
+3	2023	SE	FT	Data Scientist	175000	USD	175000	CA	100	CA	M	0.0	0.0	1.0	0.0
+4	2023	SE	FT	Data Scientist	120000	USD	120000	CA	100	CA	M	0.0	0.0	1.0	0.0
+...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...
+3750	2020	SE	FT	Data Scientist	412000	USD	412000	US	100	US	L	0.0	0.0	1.0	0.0
+3751	2021	MI	FT	Principal Data Scientist	151000	USD	151000	US	100	US	L	0.0	0.0	1.0	0.0
+3752	2020	EN	FT	Data Scientist	105000	USD	105000	US	100	US	S	0.0	0.0	1.0	0.0
+3753	2020	EN	CT	Business Data Analyst	100000	USD	100000	US	100	US	L	1.0	0.0	0.0	0.0
+3754	2021	SE	FT	Data Science Manager	7000000	INR	94665	IN	50	IN	L	0.0	0.0	1.0	0.0
+3755 rows × 15 columns
+
+ 
+ 
